@@ -1,27 +1,44 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Typography, Box, Button } from '@mui/material';
 import Board from './components/Board';
 import SnakeBody from './components/SnakeBody';
-import { Typography, Box, Button } from '@mui/material';
+import FoodLocation from './components/FoodLocation';
 import styles from './components/snake.module.css';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import ScoreboardIcon from '@mui/icons-material/Scoreboard';
+import SnakeGIF from './assets/crying-snake.gif';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const getRandomPositionFood = () => {
+  const min = 1;
+  const max = 49;
+
+  let x = Math.floor(Math.random() * (max - min));
+  let y = Math.floor(Math.random() * (max - min));
+  return [x, y];
+};
 
 const App = () => {
-  const [speed, setSpeed] = useState(400);
+  const [speed, setSpeed] = useState(200);
   const [direction, setDirection] = useState('RIGHT');
   const [isAlive, setIsAlive] = useState(false);
+  const [isGameOver, setIsGameOver] = useState();
   const [closeBtn, setCloseBtn] = useState(false);
   const [snakeShape, setSnakeShape] = useState([
     [10, 0],
     [10, 1],
     [10, 2],
   ]);
+  const [foodPoint, setFoodPoint] = useState(getRandomPositionFood());
+  const [score, setScore] = useState(0);
 
   //==========PREVENTING FROM SIDE EFFECTS==============
   useEffect(() => {
     document.onkeydown = keyHandler;
 
     checkHitTheWall();
+    eatFood();
     const moveIt = setInterval(() => {
       moveSnake();
     }, speed);
@@ -33,6 +50,7 @@ const App = () => {
   const startGame = () => {
     setCloseBtn(true);
     setIsAlive(true);
+    setIsGameOver(false);
   };
 
   //==============1. Key press event handler===========
@@ -99,25 +117,59 @@ const App = () => {
 
   //=======4.Game over when snake hit the wall======
   const gameOver = () => {
-    alert('GAME OVER! YOU DUMB MOTHERFUCKERS.');
-
+    toast.error('GAME OVER');
     setSnakeShape([
       [10, 0],
       [10, 1],
       [10, 2],
     ]);
+    setFoodPoint([10, 20]);
     setDirection(null);
     setIsAlive(false);
+    setCloseBtn(false);
+    setIsGameOver(true);
+    setScore(0);
+    setDirection('RIGHT');
+  };
+
+  //========5. Eat food=================
+  const eatFood = () => {
+    //get head values from snake body array
+    //[10,2]
+    const head = snakeShape[snakeShape.length - 1];
+    const food = foodPoint;
+
+    //snake head reaches food
+    if (head[0] === food[0] && head[1] === food[1]) {
+      setFoodPoint(getRandomPositionFood());
+      makeSnakeBigger();
+      setScore(score + 1);
+    }
+  };
+
+  //========6. Make snake bigger when eats======
+  const makeSnakeBigger = () => {
+    let head = snakeShape[snakeShape.length - 1];
+    let newBody = [...snakeShape, head];
+    setSnakeShape(newBody);
   };
 
   return (
     <div>
       <Board>
-        <Typography sx={{ textAlign: 'center' }}>
+        <Typography
+          variant='h4'
+          sx={{ textAlign: 'center', fontWeight: '600' }}
+        >
           Snake game by Ganzo
+        </Typography>
+        <Typography sx={{ textAlign: 'center', fontSize: '1.5rem' }}>
+          <ScoreboardIcon />
+          Your score: {score}
         </Typography>
         <div className={styles.wrapper}>
           <SnakeBody snakeBody={snakeShape} />
+          <FoodLocation foodPoint={foodPoint} />
           {!closeBtn && (
             <Button
               onClick={startGame}
@@ -128,6 +180,12 @@ const App = () => {
               Start Game <SportsEsportsIcon />
             </Button>
           )}
+          {isGameOver && (
+            <div>
+              <img src={SnakeGIF} alt='snake' />
+            </div>
+          )}
+          <ToastContainer />
         </div>
       </Board>
     </div>
