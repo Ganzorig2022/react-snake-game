@@ -128,8 +128,8 @@ const App = () => {
     //get head values from snake body array
     const head = snakeShape[snakeShape.length - 1];
 
-    //if head[0]===50 means [50, 0] -> game over etc...
-    if (head[0] === 50 || head[1] === 50 || head[0] < 0 || head[1] < 0)
+    //if head[0]===40 means [40, 0] -> game over etc...
+    if (head[0] === 40 || head[1] === 40 || head[0] < 0 || head[1] < 0)
       gameOver();
   };
 
