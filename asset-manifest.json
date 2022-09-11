@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/snake-react/static/css/main.47e70e00.css",
-    "main.js": "/snake-react/static/js/main.d35d2cdd.js",
+    "main.js": "/snake-react/static/js/main.dada0942.js",
     "static/js/787.670a7067.chunk.js": "/snake-react/static/js/787.670a7067.chunk.js",
     "static/media/crying-snake.gif": "/snake-react/static/media/crying-snake.0e0b8a392a8f2a1559a9.gif",
     "index.html": "/snake-react/index.html",
     "main.47e70e00.css.map": "/snake-react/static/css/main.47e70e00.css.map",
-    "main.d35d2cdd.js.map": "/snake-react/static/js/main.d35d2cdd.js.map",
+    "main.dada0942.js.map": "/snake-react/static/js/main.dada0942.js.map",
     "787.670a7067.chunk.js.map": "/snake-react/static/js/787.670a7067.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.47e70e00.css",
-    "static/js/main.d35d2cdd.js"
+    "static/js/main.dada0942.js"
   ]
 }
