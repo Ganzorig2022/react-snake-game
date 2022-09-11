@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './snake.module.css';
+import styles from './snakeBody.module.css';
 
 const FoodLocation = ({ foodPoint }) => {
   return (

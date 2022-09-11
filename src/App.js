@@ -1,9 +1,12 @@
+import './App.css';
 import { useState, useEffect } from 'react';
 import { Typography, Box, Button } from '@mui/material';
+// import { Board, NavBar, SnakeBody, FoodLocation } from './components/';
 import Board from './components/Board';
 import SnakeBody from './components/SnakeBody';
 import FoodLocation from './components/FoodLocation';
-import styles from './components/snake.module.css';
+import Navbar from './components/Navbar';
+import styles from './components/snakeBody.module.css';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import SnakeGIF from './assets/crying-snake.gif';
@@ -12,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const getRandomPositionFood = () => {
   const min = 1;
-  const max = 49;
+  const max = 39;
 
   let x = Math.floor(Math.random() * (max - min));
   let y = Math.floor(Math.random() * (max - min));
@@ -32,8 +35,10 @@ const App = () => {
   ]);
   const [foodPoint, setFoodPoint] = useState(getRandomPositionFood());
   const [score, setScore] = useState(0);
+  const [scoreIsChanged, setScoreIsChanged] = useState(false);
 
   //==========PREVENTING FROM SIDE EFFECTS==============
+  //1.
   useEffect(() => {
     document.onkeydown = keyHandler;
 
@@ -46,6 +51,19 @@ const App = () => {
     return () => clearInterval(moveIt);
   });
 
+  //2. Score point bumps when score state changes!!!!!!
+  useEffect(() => {
+    if (score === 0) return;
+
+    setScoreIsChanged(true);
+
+    const timer = setTimeout(() => {
+      setScoreIsChanged(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [score]);
+
+  const textBumpStyle = `${scoreIsChanged && styles.bump}`;
   //=========0. Start Button triggers SNAKE GAME=========
   const startGame = () => {
     setCloseBtn(true);
@@ -156,29 +174,39 @@ const App = () => {
 
   return (
     <div>
+      <Navbar />
       <Board>
-        <Typography
-          variant='h4'
-          sx={{ textAlign: 'center', fontWeight: '600' }}
+        <Box
+          sx={{
+            width: '40rem',
+            background: '#84ffff',
+            borderRadius: '10px',
+            marginBottom: '10px',
+          }}
         >
-          Snake game by Ganzo
-        </Typography>
-        <Typography sx={{ textAlign: 'center', fontSize: '1.5rem' }}>
-          <ScoreboardIcon />
-          Your score: {score}
-        </Typography>
+          <Typography sx={{ textAlign: 'center', fontSize: '1.5rem' }}>
+            <ScoreboardIcon />
+            Your score:
+            <small className={textBumpStyle}>{score}</small>
+          </Typography>
+        </Box>
         <div className={styles.wrapper}>
           <SnakeBody snakeBody={snakeShape} />
           <FoodLocation foodPoint={foodPoint} />
           {!closeBtn && (
-            <Button
-              onClick={startGame}
-              color='success'
-              variant='contained'
-              className={styles.button}
-            >
-              Start Game <SportsEsportsIcon />
-            </Button>
+            <Box display='flex' justifyContent='center' alignItems='center'>
+              <Button
+                onClick={startGame}
+                color='success'
+                variant='contained'
+                sx={{
+                  background: '#dd2c00',
+                  color: '#fff',
+                }}
+              >
+                Start Game <SportsEsportsIcon />
+              </Button>
+            </Box>
           )}
           {isGameOver && (
             <div>
